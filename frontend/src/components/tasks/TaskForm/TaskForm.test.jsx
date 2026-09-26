@@ -4,12 +4,11 @@ import { describe, test, expect, vi } from "vitest";
 import TaskForm from "./TaskForm";
 
 describe("TaskForm", () => {
-  test("el botón de enviar está deshabilitado si title está vacío", () => {
+  test("no invoca onSubmit si el título está vacío", () => {
     const onSubmit = vi.fn();
 
     render(
       <TaskForm
-        task={null}
         onSubmit={onSubmit}
       />
     );
@@ -18,7 +17,9 @@ describe("TaskForm", () => {
       name: /guardar|crear|enviar/i,
     });
 
-    expect(submitButton).toBeDisabled();
+    fireEvent.click(submitButton);
+
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 
   test("precarga los campos cuando recibe una tarea por prop", () => {
@@ -28,12 +29,12 @@ describe("TaskForm", () => {
       id: 1,
       title: "Estudiar React",
       description: "Repasar componentes y hooks",
-      priority: "high",
+      priority: "alta",
     };
 
     render(
       <TaskForm
-        task={task}
+        initialData={task}
         onSubmit={onSubmit}
       />
     );
@@ -47,7 +48,7 @@ describe("TaskForm", () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByDisplayValue("high")
+      screen.getByDisplayValue("Alta")
     ).toBeInTheDocument();
   });
 
@@ -56,7 +57,6 @@ describe("TaskForm", () => {
 
     render(
       <TaskForm
-        task={null}
         onSubmit={onSubmit}
       />
     );
@@ -79,11 +79,17 @@ describe("TaskForm", () => {
       },
     });
 
+    const dueDateInput = screen.getByLabelText(/fecha de entrega/i);
+
+    fireEvent.change(dueDateInput, {
+      target: {
+        value: "2026-10-01",
+      },
+    });
+
     const submitButton = screen.getByRole("button", {
       name: /guardar|crear|enviar/i,
     });
-
-    expect(submitButton).not.toBeDisabled();
 
     fireEvent.click(submitButton);
 

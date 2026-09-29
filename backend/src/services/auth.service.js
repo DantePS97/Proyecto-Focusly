@@ -181,8 +181,8 @@ const getProfile = async (token) => {
     process.env.JWT_SECRET
   );
 
-  const user = await userRepository.findByEmail(
-    decoded.email
+  const user = await userRepository.getUserById(
+    decoded.sub
   );
 
   if (!user) {
@@ -208,8 +208,8 @@ const refreshToken = async (token) => {
     }
   );
 
-  const user = await userRepository.findByEmail(
-    decoded.email
+  const user = await userRepository.getUserById(
+    decoded.sub
   );
 
   if (!user) {

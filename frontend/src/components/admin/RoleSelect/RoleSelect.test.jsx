@@ -18,7 +18,10 @@ describe("RoleSelect", () => {
 
   test("dispara el callback de cambio de rol con el valor correcto", async () => {
     const user = userEvent.setup();
-    const handleChange = vi.fn();
+    let receivedValue;
+    const handleChange = vi.fn((event) => {
+      receivedValue = event.target.value;
+    });
 
     render(
       <RoleSelect
@@ -32,12 +35,6 @@ describe("RoleSelect", () => {
     await user.selectOptions(select, "Administrador");
 
     expect(handleChange).toHaveBeenCalled();
-    expect(handleChange).toHaveBeenCalledWith(
-      expect.objectContaining({
-        target: expect.objectContaining({
-          value: "Administrador",
-        }),
-      })
-    );
+    expect(receivedValue).toBe("Administrador");
   });
 });

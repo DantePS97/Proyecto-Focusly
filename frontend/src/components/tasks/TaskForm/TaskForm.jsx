@@ -30,7 +30,13 @@ const TaskForm = ({
       priority: initialData.priority || "media",
       status: initialData.status || "pendiente",
     });
-  }, [initialData]);
+  }, [
+    initialData.title,
+    initialData.description,
+    initialData.dueDate,
+    initialData.priority,
+    initialData.status,
+  ]);
 
   // =========================================
   // MANEJAR CAMBIOS
